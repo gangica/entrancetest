@@ -1,13 +1,21 @@
 const initialState = {
-  loading: false
+  loading: false,
+  error: false,
+  user: {}
 }
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "TEST":
+    case "LOADING":
       return {
         ...state,
-        loading: action.payload.state
+        loading: !state.loading
+      }
+
+    case 'SET_USER':
+      return {
+        ...state,
+        user: action.payload
       }
 
     default:

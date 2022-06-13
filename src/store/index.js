@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import thunk from 'redux-thunk';
+import { loadState, saveState } from "../helpers";
 import userReducer from './reducers/userReducer';
 
 const reducer = {
@@ -8,7 +9,14 @@ const reducer = {
 
 const middleware = [thunk];
 
+const persistedState = loadState();
+
 export const store = configureStore({
   reducer,
-  middleware
+  middleware,
+  preloadedState: persistedState
 })
+
+store.subscribe(() => {
+  saveState(store.getState());
+});

@@ -1,4 +1,5 @@
 import React, { forwardRef, useRef, useState } from 'react';
+import { mapValuesToObject } from '../../helpers';
 
 const Input = forwardRef(({
   item,
@@ -27,7 +28,7 @@ const Form = ({
   const [formFields, setFormFields] = useState(fields);
 
   const validateFields = (fields) => {
-    const passwordRule = /^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[#?!@$%^&*\-_]).{6,18}$/;
+    const passwordRule = /^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[#?!@$%^&*\-._]).{6,18}$/;
     const emailRule = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     let hasError = false;
 
@@ -80,7 +81,7 @@ const Form = ({
     }
 
     // transform values and call API
-    submit()
+    submit(mapValuesToObject(currentFields))
   }
 
   return (

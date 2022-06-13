@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { setLoading } from '../../store/actions/userAction';
+import { Link, useNavigate } from 'react-router-dom';
+import { login } from '../../store/actions/userAction';
 import Form from '../Form';
 
-const Login = ({ 
-  loading, 
-  dispatch, 
-  setLoading 
+const Login = ({
+  user,
+  loading,
+  dispatch,
+  login
 }) => {
   const formFields = [
     {
@@ -24,19 +25,27 @@ const Login = ({
     }
   ]
 
+  let navigate = useNavigate();
+
+  const submit = (data) => dispatch(
+    login(data, {
+      callback: () => navigate("/", { replace: true })
+    })
+  );
+
   return (
     <div className="App">
       <h1>Login Bro {loading.toString()}</h1>
-
-      <Form 
+      <p>{user.lastName} - {user.firstName}</p>
+      <Form
         fields={formFields}
         submitText="Login"
+        submit={submit}
       />
       <Link to="/signup">
         <button>Signup</button>
       </Link>
       <button
-        onClick={() => dispatch(setLoading(!loading))}
       >
         Login
       </button>
@@ -45,12 +54,13 @@ const Login = ({
 }
 
 const mapStateToProps = (state) => ({
-  loading: state.user.loading
+  loading: state.user.loading,
+  user: state.user.user
 })
 
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
-  setLoading
+  login
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

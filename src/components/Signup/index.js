@@ -1,15 +1,18 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { signup } from "../../store/actions/userAction";
 import Form from '../Form';
 
-const Signup = () => {
+const Signup = ({ dispatch, signup }) => {
   const formFields = [
     {
-      id: "firstname",
+      id: "firstName",
       title: "First Name",
       placeholder: "First name"
     },
     {
-      id: "lastname",
+      id: "lastName",
       title: "Last Name",
       placeholder: "Last name"
     },
@@ -28,6 +31,14 @@ const Signup = () => {
     }
   ]
 
+  let navigate = useNavigate();
+
+  const submit = (data) => dispatch(
+    signup(data, {
+      callback: () => navigate("/", { replace: true })
+    })
+  );
+
   return (
     <div className="App">
       <h1>Signup Bro</h1>
@@ -35,9 +46,19 @@ const Signup = () => {
       <Form
         fields={formFields}
         submitText="Signup"
+        submit={submit}
       />
     </div>
   );
 }
 
-export default Signup;
+const mapStateToProps = (state) => ({
+  loading: state.user.loading
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  dispatch,
+  signup
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);
