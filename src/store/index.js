@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import thunk from 'redux-thunk';
-import { loadState, saveState } from "../helpers";
+import { loadState, saveState } from "../services/localStorage";
 import userReducer from './reducers/userReducer';
 
 const reducer = {

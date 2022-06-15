@@ -1,28 +1,45 @@
-import React, { forwardRef, useRef, useState } from 'react';
-import { mapValuesToObject } from '../../helpers';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import { checkPasswordStrength, mapValuesToObject } from '../../helpers';
+import { 
+  FormFeedback, 
+  Input as StrapInput, 
+  Form as StrapForm, 
+  FormGroup, 
+  Label, 
+  Button 
+} from 'reactstrap';
 
 const Input = forwardRef(({
   item,
   error
 }, ref) => {
+  const { isRequired = true } = item;
+
   return (
-    <div style={{ textAlign: 'left' }}>
-      <div>{item.title}</div>
-      <input
-        ref={ref}
+    <FormGroup style={{ textAlign: 'left' }}>
+      <Label>
+        {item.title}
+        {isRequired && <span style={{ color: 'red' }}>*</span>}
+      </Label>
+      <StrapInput
+        innerRef={ref}
         id={item.id}
         placeholder={item.placeholder}
         type={item.type}
+        invalid={error}
       />
-      {error && <div>{error}</div>}
-    </div>
+      {error && <FormFeedback>{error}</FormFeedback>}
+    </FormGroup>
   )
 })
 
 const Form = ({
+  header,
+  footer,
   fields,
   submitText = "Submit",
-  submit = () => {}
+  submit = () => {},
+  callbackError
 }) => {
   const inputRefs = useRef([]);
   const [formFields, setFormFields] = useState(fields);
@@ -85,10 +102,11 @@ const Form = ({
   }
 
   return (
-    <form 
-      style={{ width: 200, display: 'flex', flexDirection: 'column', margin: '0 auto' }}
+    <StrapForm 
+      className="d-flex flex-column w-75 mx-auto"
       onSubmit={handleSubmit}
     >
+      {header && header}
       {
         formFields.map((item, i) => {
           return (
@@ -101,8 +119,15 @@ const Form = ({
           )
         })
       }
-      <input type="submit" value={submitText} />
-    </form>
+      {callbackError && <div className="mb-2" style={{ color: 'red' }}>{callbackError}</div>}
+      <Button 
+        color="primary" 
+        className="mt-"
+      >
+        {submitText}
+      </Button>
+      {footer && footer}
+    </StrapForm>
   )
 }
 

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../../store/actions/userAction';
 import Form from '../Form';
+import { Container, Row, Col } from 'reactstrap';
+import { ReactComponent as LoginBackground } from '../../assets/images/login.svg';
 
 const Login = ({
   user,
@@ -10,6 +12,8 @@ const Login = ({
   dispatch,
   login
 }) => {
+  const [callbackError, setCallbackError] = useState("");
+
   const formFields = [
     {
       id: "email",
@@ -29,27 +33,48 @@ const Login = ({
 
   const submit = (data) => dispatch(
     login(data, {
-      callback: () => navigate("/", { replace: true })
+      callback: () => navigate("/", { replace: true }),
+      callbackFail: (message) => setCallbackError(message)
     })
   );
 
   return (
-    <div className="App">
-      <h1>Login Bro {loading.toString()}</h1>
-      <p>{user.lastName} - {user.firstName}</p>
-      <Form
-        fields={formFields}
-        submitText="Login"
-        submit={submit}
-      />
-      <Link to="/signup">
-        <button>Signup</button>
-      </Link>
-      <button
-      >
-        Login
-      </button>
-    </div>
+    <Container 
+      fluid
+    >
+      <Row>
+        <Col 
+          md="8" 
+          lg="8" 
+          className="bg-light d-flex align-items-center justify-content-center p-5"
+          style={{ minHeight: '100vh' }}
+        >
+          <LoginBackground />
+        </Col>
+        <Col md="4" lg="4" className="d-flex align-items-center">
+          <Form
+            fields={formFields}
+            header={(
+              <div className="mb-2">
+                <h3>Welcome to ReactJS Test Interview!</h3>
+                <p>Please sign-in to your account and start the adventure</p>
+              </div>
+            )}
+            footer={(
+              <h6 className="my-3 text-center">
+                <span>New on our platform? </span>
+                <Link to="/signup">
+                  Create an account
+                </Link>
+              </h6>
+            )}
+            submitText="Login"
+            submit={submit}
+            callbackError={callbackError}
+          />
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

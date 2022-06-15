@@ -1,15 +1,15 @@
 import { 
-  clearLocalStorage, 
-  fetchData, 
+  clearLocalStorage,
   getLocalAccessToken, 
   setLocalAccessToken 
-} from "../../helpers";
+} from "../../services/localStorage";
+import { fetchData } from '../../services/fetchData';
 
 export const fetchLoading = () => ({
   type: "LOADING"
 })
 
-export const login = (data, { callback }) => {
+export const login = (data, { callback, callbackFail }) => {
   return dispatch => {
     dispatch(fetchLoading())
 
@@ -32,13 +32,15 @@ export const login = (data, { callback }) => {
 
         callback()
       },
-      handleError: (error) => {console.log(error)
-        dispatch(fetchLoading())
+      handleError: (error) => {console.log(error?.response?.data?.errors)
+        dispatch(fetchLoading());
 
         dispatch({
-          type: "LOGIN_FAIL",
-          payload: error
+          type: "FETCH_FAIL"
         })
+
+        const message = error?.response?.data?.errors?.message || error?.response?.data?.errors?.password || ["Đã có lỗi"];
+        callbackFail(message[0])
       }
     })
   }
@@ -71,8 +73,7 @@ export const signup = (data, { callback }) => {
         dispatch(fetchLoading())
 
         dispatch({
-          type: "SIGNUP_FAIL",
-          payload: error
+          type: "FETCH_FAIL"
         })
       }
     })
@@ -110,8 +111,7 @@ export const logout = ({ callback }) => {
         dispatch(fetchLoading())
 
         dispatch({
-          type: "LOGOUT_FAIL",
-          payload: error
+          type: "FETCH_FAIL"
         })
       }
     })

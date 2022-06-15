@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { getLocalAccessToken } from '../helpers';
+import { getLocalAccessToken } from '../services/localStorage';
 
 const GuestRoute = ({
   redirect = "/"

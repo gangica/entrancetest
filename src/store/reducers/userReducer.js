@@ -18,6 +18,12 @@ const userReducer = (state = initialState, action) => {
         user: action.payload
       }
 
+    case 'FETCH_FAIL': 
+      return {
+        ...state,
+        error: true
+      }
+
     default:
       return state
   }
